@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tails OS - Privacidad extrema">
+    <title>Tails OS • Privacidad Extrema</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nasa-blue: #0b3d91;
+            --nasa-red: #fc3d21;
+            --dark-bg: #060614;
+            --card-bg: #0e0e2c;
+            --card-border: #1e1e4a;
+            --text: #c8d4f0;
+            --text-bright: #e8eeff;
+            --tails-green: #36d68a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 60% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 80%, rgba(255,255,255,0.4) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        nav {
+            background: rgba(11, 61, 145, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(252,61,33,0.3);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 4px 0;
+        }
+        .nav-links a:hover { color: white; }
+        .nav-links a.active {
+            color: var(--nasa-red);
+            border-bottom: 2px solid var(--nasa-red);
+        }
+
+        .page-hero {
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(54,214,138,0.08) 0%, transparent 70%);
+        }
+        .page-hero .badge {
+            display: inline-block;
+            background: rgba(54,214,138,0.12);
+            border: 1px solid rgba(54,214,138,0.35);
+            color: var(--tails-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+        .page-hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .page-hero p {
+            font-size: 1.1rem;
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 70px 20px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--tails-green);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        /* HOW IT WORKS */
+        .how-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .how-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+        .how-text p strong { color: white; }
+        .how-img {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(54,214,138,0.15);
+        }
+        .how-img img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+        .how-img .caption {
+            background: var(--card-bg);
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            color: rgba(200,212,240,0.6);
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* STEPS */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .step {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+            padding-bottom: 2rem;
+        }
+        .step:last-child { padding-bottom: 0; }
+        .step-num {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(54,214,138,0.15);
+            border: 2px solid var(--tails-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--tails-green);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+        .step-connector {
+            position: absolute;
+            left: 21px;
+            top: 44px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--tails-green), transparent);
+        }
+        .step:last-child .step-connector { display: none; }
+        .step-body { padding-top: 8px; }
+        .step-body h4 { font-weight: 700; color: white; margin-bottom: 6px; font-size: 1rem; }
+        .step-body p { font-size: 0.95rem; color: var(--text); line-height: 1.6; }
+
+        /* USERS */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .user-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .user-card:hover {
+            border-color: rgba(54,214,138,0.3);
+            transform: translateY(-4px);
+        }
+        .user-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(30%) brightness(0.8);
+        }
+        .user-card-body { padding: 22px; }
+        .user-card-body h4 { font-weight: 700; color: white; margin-bottom: 8px; }
+        .user-card-body p { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+
+        /* ACCORDION */
+        .accordion { display: flex; flex-direction: column; gap: 10px; }
+        details {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        details[open] { border-color: rgba(54,214,138,0.3); }
+        summary {
+            padding: 20px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            user-select: none;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: '+';
+            font-size: 1.4rem;
+            color: var(--tails-green);
+            transition: transform 0.3s;
+        }
+        details[open] summary::after { content: '−'; }
+        .details-content {
+            padding: 0 24px 24px;
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .details-content p { margin-bottom: 0.8rem; }
+        .details-content p:last-child { margin-bottom: 0; }
+        .details-content strong { color: white; }
+
+        /* COMPARISON */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+        .compare-table th, .compare-table td {
+            padding: 16px 22px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.95rem;
+        }
+        .compare-table th {
+            background: var(--nasa-blue);
+            color: white;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .compare-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .compare-table td:first-child { color: rgba(200,212,240,0.7); font-size: 0.9rem; }
+        .green { color: #4ade80; font-weight: 600; }
+        .orange { color: #facc15; font-weight: 600; }
+
+        /* ALERT BOX */
+        .alert-box {
+            background: rgba(54,214,138,0.08);
+            border: 1px solid rgba(54,214,138,0.3);
+            border-radius: 12px;
+            padding: 24px 28px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .alert-icon { font-size: 1.8rem; flex-shrink: 0; }
+        .alert-box p { font-size: 0.95rem; color: var(--text); line-height: 1.7; }
+        .alert-box p strong { color: white; }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(11,61,145,0.3);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 50px 20px 30px;
+            text-align: center;
+        }
+        .footer-brand { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: white; margin-bottom: 1.2rem; display: block; }
+        .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .footer-links a { color: rgba(200,212,240,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+        .footer-copy { font-size: 0.85rem; color: rgba(200,212,240,0.4); }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+            .how-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"> NASA SEGURIDAD</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="redhat.html">Red Hat</a></li>
+                <li><a href="tails.html" class="active">Tails OS</a></li>
+                <li><a href="linux.html">Linux vs Windows</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <span class="badge"> Privacidad Extrema</span>
+        <h1>Tails OS</h1>
+        <p>El sistema operativo amnésico que no deja rastro. Diseñado para la privacidad total y adoptado por periodistas, activistas y expertos en seguridad.</p>
+    </div>
+
+    <!-- QUÉ ES -->
+    <section>
+        <span class="section-label">¿Qué es Tails?</span>
+        <div class="how-grid">
+            <div class="how-text">
+                <div class="section-title">The Amnesic Incognito Live System</div>
+                <p>Tails es un sistema operativo completo basado en Debian que se ejecuta enteramente desde una memoria USB. Su nombre lo dice todo: <strong>amnésico</strong> porque no recuerda nada, e <strong>incógnito</strong> porque no revela tu identidad.</p>
+                <p>A diferencia de Windows o una instalación normal de Linux, Tails no escribe nada en el disco duro del ordenador. Todo ocurre en la RAM y, al apagar el equipo, <strong>toda evidencia de la sesión desaparece</strong>.</p>
+                <p>Todo el tráfico de red se enruta automáticamente a través de <strong>Tor</strong>, la red de anonimato que hace prácticamente imposible rastrear tu ubicación o actividad.</p>
+            </div>
+            <div class="how-img">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Tails-logo-flat-inverted.svg/1280px-Tails-logo-flat-inverted.svg.png" alt="Tails OS Logo" style="object-fit:contain; padding:50px; background:#050510;">
+                <div class="caption">Tails OS — Sistema de privacidad extrema basado en Debian GNU/Linux</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA PASO A PASO -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Funcionamiento</span>
+        <div class="section-title">¿Cómo funciona Tails?</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+            <div class="steps">
+                <div class="step">
+                    <div>
+                        <div class="step-num">01</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4>Arranque desde USB</h4>
+                        <p>Insertas la USB con Tails y arrancas el ordenador desde ella. El sistema se carga completamente en la memoria RAM, sin tocar el disco duro.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div>
+                        <div class="step-num">02</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4>Todo el tráfico pasa por Tor</h4>
+                        <p>Cualquier conexión a Internet se enruta automáticamente por la red Tor, cifrando el tráfico y ocultando tu dirección IP real.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div>
+                        <div class="step-num">03</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4>Trabajo en sesión aislada</h4>
+                        <p>Dispones de herramientas de cifrado (GPG, VeraCrypt), navegador Tor Browser, cliente de correo cifrado y aplicaciones de mensajería segura.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div>
+                        <div class="step-num">04</div>
+                    </div>
+                    <div class="step-body">
+                        <h4>Apagado y amnesia total</h4>
+                        <p>Al apagar, la RAM se sobrescribe con datos aleatorios. No quedan cookies, historial, archivos temporales ni ningún rastro digital en el equipo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion">
+                <details>
+                    <summary>¿Qué hace Tor exactamente?</summary>
+                    <div class="details-content">
+                        <p>Tor (The Onion Router) enruta tu tráfico a través de <strong>al menos 3 nodos</strong> cifrados alrededor del mundo. Cada nodo solo conoce el anterior y el siguiente, haciendo imposible rastrear el origen.</p>
+                        <p>Tails fuerza todo el tráfico del sistema por Tor, incluyendo aplicaciones que normalmente no usarían una VPN o proxy.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>¿Deja algún rastro en el PC?</summary>
+                    <div class="details-content">
+                        <p>Por defecto, <strong>ningún rastro</strong>. Tails no monta el disco duro del equipo y no escribe nada en él. Al apagar, la RAM se borra activamente.</p>
+                        <p>La única excepción es el almacenamiento persistente opcional, que puedes crear y cifrar en la misma USB si necesitas guardar archivos entre sesiones.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>¿Se puede usar en cualquier ordenador?</summary>
+                    <div class="details-content">
+                        <p>Sí, en cualquier ordenador con <strong>procesador x86-64</strong> que permita arrancar desde USB. No hace falta instalar nada ni modificar el sistema existente.</p>
+                        <p>Es compatible con la mayoría de PCs y portátiles con Windows, macOS o Linux. Solo necesitas configurar el orden de arranque en la BIOS/UEFI.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>¿Qué herramientas incluye?</summary>
+                    <div class="details-content">
+                        <p>Tails incluye: <strong>Tor Browser</strong> (navegación anónima), <strong>Thunderbird</strong> con soporte GPG, <strong>KeePassXC</strong> (gestor de contraseñas), <strong>VeraCrypt</strong>, <strong>OnionShare</strong> para transferir archivos de forma anónima, y <strong>electrum</strong> para criptomonedas.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUIÉN LO USA -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Usuarios reales</span>
+        <div class="section-title">¿Quién usa Tails y por qué?</div>
+        <div class="users-grid">
+            <div class="user-card">
+                <img src="https://www.xlsemanal.com/wp-content/uploads/sites/3/2019/09/edward-snowden-si-algun-dia-caigo-por-una-ventana-tengan-por-seguro-que-me-han-empujado-4-1366x768.jpg" alt="Edward Snowden">
+                <div class="user-card-body">
+                    <h4> Edward Snowden</h4>
+                    <p>El ex-analista de la NSA usó Tails para filtrar documentos clasificados sin ser rastreado. Recomendó públicamente Tails como herramienta esencial de privacidad.</p>
+                </div>
+            </div>
+            <div class="user-card">
+                <img src="https://static.dw.com/image/51959921_604.jpg" alt="Periodistas">
+                <div class="user-card-body">
+                    <h4> Periodistas de investigación</h4>
+                    <p>Organizaciones como WikiLeaks, The Guardian e Intercept usan o recomiendan Tails para proteger a sus fuentes y comunicaciones internas.</p>
+                </div>
+            </div>
+            <div class="user-card">
+                <img src="https://res.cloudinary.com/kennedy-space-center/image/upload/ar_1:1%2Cc_fill%2Cg_auto%2Cw_400/q_auto/f_auto/Headshot_JanDavis?_a=DATAdtXwZAA0" alt="Activistas" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tails-logo-flat-inverted.svg/512px-Tails-logo-flat-inverted.svg.png'; this.style.objectFit='contain'; this.style.padding='40px'; this.style.background='#050510';">
+                <div class="user-card-body">
+                    <h4> Activistas de derechos humanos</h4>
+                    <p>En países con regímenes autoritarios, activistas usan Tails para comunicarse de forma segura y evitar la vigilancia gubernamental.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPARATIVA -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Comparativa</span>
+        <div class="section-title">Tails vs otras soluciones de privacidad</div>
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Característica</th>
+                    <th>Tails OS</th>
+                    <th>VPN</th>
+                    <th>Modo incógnito</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Rastro en el equipo</td>
+                    <td class="green">Ninguno</td>
+                    <td class="orange">Sí deja rastro</td>
+                    <td class="orange">Sí deja rastro</td>
+                </tr>
+                <tr>
+                    <td>Oculta IP real</td>
+                    <td class="green">Sí (Tor)</td>
+                    <td class="orange">Parcialmente</td>
+                    <td style="color:#ef4444; font-weight:600;">No</td>
+                </tr>
+                <tr>
+                    <td>Cifrado de tráfico</td>
+                    <td class="green">Total (multicapa)</td>
+                    <td class="orange">Sí, pero un nodo</td>
+                    <td style="color:#ef4444; font-weight:600;">No</td>
+                </tr>
+                <tr>
+                    <td>Sin punto de confianza único</td>
+                    <td class="green">Sí (red Tor)</td>
+                    <td style="color:#ef4444; font-weight:600;">No (el proveedor VPN)</td>
+                    <td style="color:#ef4444; font-weight:600;">No</td>
+                </tr>
+                <tr>
+                    <td>Código abierto y auditable</td>
+                    <td class="green">100% abierto</td>
+                    <td class="orange">Varía</td>
+                    <td class="orange">Varía</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert-box" style="margin-top: 24px;">
+            <span class="alert-icon"></span>
+            <p><strong>Importante:</strong> Tails no es infalible. No protege contra errores humanos, hardware comprometido (BIOS/UEFI infectada) ni ataques de canal lateral. Es una herramienta potente, pero requiere conocimiento y disciplina operacional para ser efectiva.</p>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-brand"> NASA SEGURIDAD</span>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="redhat.html">Red Hat</a>
+            <a href="tails.html">Tails OS</a>
+            <a href="linux.html">Linux vs Windows</a>
+            <a href="https://github.com/ijebbansmx2n25-lgtm/Nasa" target="_blank">GitHub</a>
+        </div>
+        <p class="footer-copy">Iliyas Jebban • Seguridad Informática 2026 • Copyright © 2026</p>
+    </footer>
+</body>
+</html>

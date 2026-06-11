@@ -1,0 +1,711 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Seguridad Informática de la NASA: Red Hat, Tails y por qué elijo Linux en 2026">
+    <title>Seguridad Informática NASA • Linux en el Espacio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nasa-blue: #0b3d91;
+            --nasa-red: #fc3d21;
+            --dark-bg: #060614;
+            --card-bg: #0e0e2c;
+            --card-border: #1e1e4a;
+            --text: #c8d4f0;
+            --text-bright: #e8eeff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+
+        /* Starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 75% 25%, rgba(255,255,255,0.4) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: rgba(11, 61, 145, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(252,61,33,0.3);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            padding: 4px 0;
+        }
+        .nav-links a:hover { color: white; }
+        .nav-links a.active {
+            color: var(--nasa-red);
+            border-bottom: 2px solid var(--nasa-red);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: 
+                radial-gradient(ellipse at 50% 0%, rgba(11,61,145,0.5) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(252,61,33,0.1) 0%, transparent 50%);
+            padding: 80px 20px;
+        }
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(252,61,33,0.15);
+            border: 1px solid rgba(252,61,33,0.4);
+            color: #ff7a5a;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        .hero h1 span { color: var(--nasa-red); }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--nasa-red);
+            color: white;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            background: #ff5a3a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(252,61,33,0.4);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 14px 36px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            background: rgba(11,61,145,0.4);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            backdrop-filter: blur(10px);
+        }
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        .stat-item { border-right: 1px solid rgba(255,255,255,0.1); }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(200,212,240,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* SECTIONS */
+        section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 90px 20px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--nasa-red);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text);
+            max-width: 650px;
+            margin-bottom: 3.5rem;
+        }
+
+        /* INTRO BLOCK */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .intro-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+        .intro-text p strong { color: white; }
+        .intro-image {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        .intro-image img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+        .intro-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(252,61,33,0.2);
+            border-radius: 16px;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--nasa-red), var(--nasa-blue));
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--nasa-red);
+            border: 2px solid var(--dark-bg);
+            box-shadow: 0 0 10px rgba(252,61,33,0.5);
+        }
+        .timeline-year {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--nasa-red);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .timeline-title {
+            font-weight: 600;
+            color: white;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+        .timeline-text {
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        /* CARDS GRID */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(252, 61, 33, 0.15);
+            border-color: rgba(252,61,33,0.3);
+        }
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #0a0a20;
+        }
+        .card-img-contain {
+            object-fit: contain;
+            padding: 30px;
+        }
+        .card-body {
+            padding: 28px;
+        }
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--nasa-red);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .card-body h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: white;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .card-body p {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--nasa-red);
+        }
+
+        /* FEATURE GRID */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .feature-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 28px;
+            transition: border-color 0.3s;
+        }
+        .feature-item:hover { border-color: rgba(252,61,33,0.3); }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .feature-item h4 {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .feature-item p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* FULL-WIDTH IMAGE SECTION */
+        .image-showcase {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            padding: 0;
+        }
+        .image-showcase img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.6) saturate(1.2);
+        }
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, rgba(6,6,20,0.8), transparent, rgba(6,6,20,0.8));
+        }
+        .image-overlay-text {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .image-overlay-text h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .image-overlay-text p {
+            font-size: 1.1rem;
+            color: rgba(200,212,240,0.9);
+        }
+
+        /* FOOTER */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(11,61,145,0.3);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .footer-links a {
+            color: rgba(200,212,240,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: white; }
+        .footer-copy {
+            font-size: 0.85rem;
+            color: rgba(200,212,240,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+            .intro-grid { grid-template-columns: 1fr; }
+            .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                 NASA SEGURIDAD
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="redhat.html">Red Hat</a></li>
+                <li><a href="tails.html">Tails OS</a></li>
+                <li><a href="linux.html">Linux vs Windows</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-badge"> Seguridad Informática 2026</span>
+            <h1>Linux protege<br><span>las misiones espaciales</span></h1>
+            <p>Cómo Red Hat Enterprise Linux, TOSS y Tails OS blindan los supercomputadores y datos más sensibles de la NASA contra ciberataques.</p>
+            <div class="hero-btns">
+                <a href="redhat.html" class="btn-primary">Explorar Red Hat </a>
+                <a href="linux.html" class="btn-secondary">Linux vs Windows</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Supercomputadores NASA en Linux</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">10+</span>
+                <span class="stat-label">Años de soporte Red Hat</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">TOSS 4</span>
+                <span class="stat-label">Sistema oficial NASA 2026</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Rastro dejado por Tails OS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRO -->
+    <section>
+        <span class="section-label">¿Por qué Linux?</span>
+        <div class="intro-grid">
+            <div class="intro-text">
+                <div class="section-title" style="font-size:2rem; margin-bottom:1.2rem;">La NASA confía su infraestructura a Linux desde 2015</div>
+                <p>La NASA no solo envía cohetes al espacio: también protege miles de millones de líneas de código y datos sensibles contra ciberataques sofisticados. Desde 2010, la agencia adoptó un enfoque <strong>"zero trust"</strong> y migró sus sistemas críticos a Linux.</p>
+                <p>En 2026, los supercomputadores Electra, Aitken y Athena funcionan con <strong>TOSS</strong> (Tri-Lab Operating System Stack), basado 100 % en Red Hat Enterprise Linux. En enero de 2026 se completó la retirada definitiva de Pleiades.</p>
+                <p>La elección no es casual: Linux ofrece código abierto auditable, herramientas como <strong>SELinux</strong> y un historial de seguridad probado en entornos donde un fallo puede costar miles de millones de dólares.</p>
+            </div>
+            <div class="intro-image">
+                <img src="https://cdn-ilejenj.nitrocdn.com/lRCwyBlNxPdxOLzMMRvbcondFXIGvRyS/assets/images/optimized/rev-25ac3bd/salasobrien.com/wp-content/uploads/2023/03/NASA_Ames-Research-Center_03-1680x857.jpg" alt="NASA Ames Research Center">
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Historia</span>
+        <div class="section-title">Evolución de la seguridad informática en la NASA</div>
+        <p class="section-subtitle">La transición hacia Linux fue gradual y deliberada, impulsada por necesidades de seguridad y estabilidad.</p>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">2003</div>
+                <div class="timeline-title">Primer Linux en misiones críticas</div>
+                <div class="timeline-text">La NASA comienza a usar Linux en sistemas de control de misión, reemplazando soluciones propietarias costosas e inflexibles.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2010</div>
+                <div class="timeline-title">Estrategia Zero Trust</div>
+                <div class="timeline-text">Tras varios incidentes de seguridad, la NASA adopta formalmente el modelo "zero trust" y acelera la migración a sistemas abiertos.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2015</div>
+                <div class="timeline-title">Migración a Red Hat Enterprise Linux</div>
+                <div class="timeline-text">Inicio de la migración masiva de supercomputadores a RHEL. Los sistemas Pleiades (SUSE) comienzan su transición a TOSS.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2023</div>
+                <div class="timeline-title">Supercomputador Athena entra en servicio</div>
+                <div class="timeline-text">El nuevo sistema de computación de alto rendimiento de la NASA opera desde el primer día sobre Red Hat Enterprise Linux 9.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2026</div>
+                <div class="timeline-title">Transición completada — TOSS 4</div>
+                <div class="timeline-text">Pleiades se retira definitivamente en enero. El 100 % de la infraestructura HPC de la NASA opera sobre TOSS 4 basado en RHEL.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARDS -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Explorar temas</span>
+        <div class="section-title">Tres pilares de la seguridad NASA</div>
+        <p class="section-subtitle">Cada sistema tiene un rol específico en la arquitectura de seguridad de la agencia espacial.</p>
+        <div class="cards-grid">
+            <a href="redhat.html" class="card">
+                <img class="card-img card-img-contain" src="https://download.logo.wine/logo/Red_Hat/Red_Hat-Logo.wine.png" alt="Red Hat">
+                <div class="card-body">
+                    <span class="card-tag">Sistema Operativo</span>
+                    <h3>Red Hat Enterprise Linux</h3>
+                    <p>El sistema oficial de los supercomputadores de la NASA. Con SELinux, soporte de 10 años y certificaciones FedRAMP y DoD.</p>
+                    <span class="card-link">Leer más </span>
+                </div>
+            </a>
+            <a href="tails.html" class="card">
+                <img class="card-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Tails-logo-flat-inverted.svg/1280px-Tails-logo-flat-inverted.svg.png" alt="Tails OS" style="object-fit:contain; padding:30px; background:#0a0a20;">
+                <div class="card-body">
+                    <span class="card-tag">Privacidad Extrema</span>
+                    <h3>Tails OS</h3>
+                    <p>El sistema amnésico que no deja rastro. Todo el tráfico pasa por Tor. La RAM se borra al apagar. Usado por Edward Snowden.</p>
+                    <span class="card-link">Leer más </span>
+                </div>
+            </a>
+            <a href="linux.html" class="card">
+                <img class="card-img" src="https://logos-world.net/wp-content/uploads/2020/09/Linux-Logo.png" alt="Linux" style="object-fit:contain; padding:20px; background:#0a0a20;">
+                <div class="card-body">
+                    <span class="card-tag">Comparativa</span>
+                    <h3>Linux vs Windows</h3>
+                    <p>Por qué la NASA eligió Linux y no Windows para sus sistemas críticos. Código abierto, seguridad y control total.</p>
+                    <span class="card-link">Leer más </span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- FULL-WIDTH IMAGE -->
+    <div class="image-showcase">
+        <img src="https://www.nas.nasa.gov/SC23/assets/images/content/31_Carriere_L_SC23_Discover_SCU17_large.jpg" alt="Supercomputadores NASA" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/800px-NASA_logo.svg.png'; this.style.objectFit='contain'; this.style.padding='40px'; this.style.background='#0b1a3a';">
+        <div class="image-overlay">
+            <div class="image-overlay-text">
+                <h2>Computación de alto rendimiento</h2>
+                <p>Los supercomputadores de la NASA procesan simulaciones de misiones Artemis, modelos climáticos y trayectorias orbitales, todo sobre Linux.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section>
+        <span class="section-label">¿Por qué Linux?</span>
+        <div class="section-title">Ventajas clave para misiones críticas</div>
+        <p class="section-subtitle">Características que hacen de Linux la elección obvia para entornos donde no hay margen de error.</p>
+        <div class="features-grid">
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>Código 100% abierto</h4>
+                <p>Cualquier ingeniero puede auditar el kernel y detectar vulnerabilidades antes de que sean explotadas.</p>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>SELinux integrado</h4>
+                <p>Control de acceso obligatorio (MAC) que limita el daño incluso si un proceso es comprometido.</p>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>Estabilidad extrema</h4>
+                <p>Servidores Linux pueden funcionar años sin reinicios. Crítico para misiones espaciales de larga duración.</p>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>Sin telemetría obligatoria</h4>
+                <p>A diferencia de Windows, Linux no envía datos de uso a terceros sin consentimiento explícito.</p>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>Certificaciones DoD y FedRAMP</h4>
+                <p>Red Hat cuenta con las certificaciones de seguridad requeridas por el gobierno federal de EE.UU.</p>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon"></span>
+                <h4>Comunidad global</h4>
+                <p>Miles de expertos en seguridad contribuyen a detectar y parchear vulnerabilidades continuamente.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-brand"> NASA SEGURIDAD</span>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="redhat.html">Red Hat</a>
+            <a href="tails.html">Tails OS</a>
+            <a href="linux.html">Linux vs Windows</a>
+            <a href="https://github.com/ijebbansmx2n25-lgtm/Nasa" target="_blank">GitHub</a>
+        </div>
+        <p class="footer-copy">Iliyas Jebban • Seguridad Informática 2026 •</p>
+    </footer>
+
+</body>
+</html>

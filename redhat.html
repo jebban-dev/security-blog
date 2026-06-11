@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Red Hat Enterprise Linux y TOSS en la NASA 2026">
+    <title>Red Hat en la NASA • TOSS 2026</title>
+    <link href="https://blog.inbest.cloud/hs-fs/hubfs/RED%20HAT%20linux.png?width=1540&name=RED%20HAT%20linux.png" rel="stylesheet">
+    <style>
+        :root {
+            --nasa-blue: #0b3d91;
+            --nasa-red: #fc3d21;
+            --dark-bg: #060614;
+            --card-bg: #0e0e2c;
+            --card-border: #1e1e4a;
+            --text: #c8d4f0;
+            --text-bright: #e8eeff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 60% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.3) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        nav {
+            background: rgba(11, 61, 145, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(252,61,33,0.3);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 4px 0;
+        }
+        .nav-links a:hover { color: white; }
+        .nav-links a.active {
+            color: var(--nasa-red);
+            border-bottom: 2px solid var(--nasa-red);
+        }
+
+        /* PAGE HERO */
+        .page-hero {
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(11,61,145,0.4) 0%, transparent 70%);
+        }
+        .page-hero .badge {
+            display: inline-block;
+            background: rgba(252,61,33,0.15);
+            border: 1px solid rgba(252,61,33,0.4);
+            color: #ff7a5a;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+        .page-hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .page-hero p {
+            font-size: 1.1rem;
+            color: var(--text);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 70px 20px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--nasa-red);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        /* CONTENT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        .content-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+        .content-text p strong { color: white; }
+        .content-img {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(252,61,33,0.15);
+        }
+        .content-img img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+        .content-img .caption {
+            background: var(--card-bg);
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            color: rgba(200,212,240,0.6);
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* FEATURE LIST */
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 1.5rem 0;
+        }
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 0.95rem;
+        }
+        .feature-list li span:first-child {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .feature-list li strong { color: white; display: block; margin-bottom: 2px; }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .card:hover {
+            border-color: rgba(252,61,33,0.3);
+            transform: translateY(-4px);
+        }
+        .card-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+        .card h4 {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .card p { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+
+        /* IMAGE STRIP */
+        .image-strip {
+            position: relative;
+            z-index: 1;
+        }
+        .image-strip img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.55) saturate(1.1);
+        }
+        .image-strip-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            background: linear-gradient(to right, rgba(6,6,20,0.85), transparent);
+        }
+        .image-strip-text h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 0.8rem;
+        }
+        .image-strip-text p {
+            font-size: 1rem;
+            color: var(--text);
+            max-width: 500px;
+        }
+
+        /* TOSS SECTION */
+        .toss-box {
+            background: linear-gradient(135deg, rgba(11,61,145,0.4), rgba(6,6,20,0.8));
+            border: 1px solid rgba(11,61,145,0.5);
+            border-radius: 20px;
+            padding: 50px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .toss-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            color: white;
+            margin-bottom: 1.2rem;
+        }
+        .toss-box p {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .toss-box p strong { color: white; }
+        .toss-img { border-radius: 12px; overflow: hidden; }
+        .toss-img img { width: 100%; height: 250px; object-fit: cover; display: block; }
+
+        /* QUOTE */
+        .quote-block {
+            border-left: 4px solid var(--nasa-red);
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border-radius: 0 12px 12px 0;
+            margin: 2rem 0;
+        }
+        .quote-block p {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-bright);
+            line-height: 1.7;
+        }
+        .quote-block cite {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: rgba(200,212,240,0.6);
+            font-style: normal;
+        }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(11,61,145,0.3);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 50px 20px 30px;
+            text-align: center;
+        }
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+        .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .footer-links a { color: rgba(200,212,240,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+        .footer-copy { font-size: 0.85rem; color: rgba(200,212,240,0.4); }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+            .content-grid, .toss-box { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"> NASA SEGURIDAD</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="redhat.html" class="active">Red Hat</a></li>
+                <li><a href="tails.html">Tails OS</a></li>
+                <li><a href="linux.html">Linux vs Windows</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <span class="badge"> Sistema Oficial NASA</span>
+        <h1>Red Hat Enterprise Linux<br>en la NASA</h1>
+        <p>Cómo RHEL se convirtió en el sistema operativo de los supercomputadores más potentes de la agencia espacial.</p>
+    </div>
+
+    <!-- INTRO -->
+    <section>
+        <span class="section-label">¿Por qué Red Hat?</span>
+        <div class="content-grid">
+            <div class="content-text">
+                <div class="section-title">La elección no fue al azar</div>
+                <p>La NASA no elige sistemas operativos de forma arbitraria. Después de años de evaluaciones técnicas y de seguridad, en 2015 comenzó la migración masiva de sus supercomputadores a Red Hat. Hoy, en 2026, <strong>TOSS</strong> (Tri-Lab Operating System Stack), basado 100 % en Red Hat Enterprise Linux 8 y 9, es el sistema oficial de toda la infraestructura HPC de la agencia.</p>
+                <p>Red Hat no es simplemente "otro Linux". Es una distribución pensada específicamente para entornos críticos donde la estabilidad, el soporte a largo plazo y las certificaciones de seguridad son requisitos no negociables.</p>
+                <div class="quote-block">
+                    <p>Red Hat Enterprise Linux es la columna vertebral de los sistemas de computación de alto rendimiento que hacen posibles nuestras misiones.</p>
+                    <cite>— Documentación técnica NASA HECC, 2025</cite>
+                </div>
+            </div>
+            <div class="content-img">
+                <img src="https://images.icon-icons.com/2108/PNG/512/redhat_icon_130844.png" alt="Red Hat" style="object-fit:contain; padding:40px; background:#0a0a1e;">
+                <div class="caption">Red Hat Enterprise Linux — El sistema operativo de confianza de la NASA desde 2015</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMAGE STRIP -->
+    <div class="image-strip">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Logo_Nasa_Ames_Research_Center.svg/1280px-Logo_Nasa_Ames_Research_Center.svg.png" alt="NASA Ames">
+        <div class="image-strip-overlay">
+            <div class="image-strip-text">
+                <h2>NASA Ames Research Center</h2>
+                <p>Sede de los supercomputadores Electra, Aitken y Athena, todos operando sobre TOSS 4 basado en Red Hat.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RAZONES -->
+    <section>
+        <span class="section-label">Ventajas técnicas</span>
+        <div class="section-title">¿Por qué Red Hat y no otro Linux?</div>
+        <ul class="feature-list">
+            <li>
+                <span></span>
+                <div><strong>SELinux activado por defecto</strong>Control de acceso obligatorio (MAC) que limita los privilegios de cada proceso, incluso si es comprometido por un atacante.</div>
+            </li>
+            <li>
+                <span></span>
+                <div><strong>Soporte empresarial de más de 10 años</strong>Red Hat garantiza parches de seguridad y actualizaciones críticas durante una década, esencial para infraestructuras que no pueden actualizarse constantemente.</div>
+            </li>
+            <li>
+                <span></span>
+                <div><strong>Certificaciones de seguridad gubernamental</strong>FedRAMP, DoD, certificaciones FIPS 140-2 y cumplimiento con los requisitos de seguridad de la NASA y el gobierno federal de EE.UU.</div>
+            </li>
+            <li>
+                <span></span>
+                <div><strong>Usado en misiones críticas</strong>Desde simulaciones de la misión Artemis hasta modelos de trayectoria del módulo Orion y los cálculos del telescopio espacial Webb.</div>
+            </li>
+            <li>
+                <span></span>
+                <div><strong>Transición completa completada en 2026</strong>Los sistemas Pleiades (SUSE) han sido completamente reemplazados por TOSS 4. Red Hat es ahora el único sistema en la infraestructura HPC de la NASA.</div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- TOSS -->
+    <section style="padding-top: 0;">
+        <div class="toss-box">
+            <div>
+                <h3>¿Qué es TOSS?</h3>
+                <p><strong>Tri-Lab Operating System Stack</strong> es una distribución de Linux desarrollada conjuntamente por los Laboratorios Nacionales Sandia, Lawrence Livermore y Los Alamos para entornos de computación de alto rendimiento.</p>
+                <p>Basado en Red Hat Enterprise Linux, TOSS añade configuraciones de seguridad endurecidas, herramientas de gestión HPC, optimizaciones de rendimiento para clústeres y componentes específicos para entornos clasificados.</p>
+                <p>La versión actual, <strong>TOSS 4</strong>, está basada en RHEL 8 y 9 e incluye el scheduler SLURM, OpenMPI y módulos de seguridad adicionales sobre SELinux.</p>
+            </div>
+            <div class="toss-img">
+                <img src="https://www.azken.com/blog/wp-content/uploads/2021/10/Imagen-portada.png" alt="Supercomputador HPC" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Red_Hat_logo.svg/512px-Red_Hat_logo.svg.png'; this.style.objectFit='contain'; this.style.padding='40px';">
+            </div>
+        </div>
+    </section>
+
+    <!-- SUPERCOMPUTADORES -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Infraestructura actual</span>
+        <div class="section-title">Los supercomputadores de la NASA en 2026</div>
+        <div class="cards-grid">
+            <div class="card">
+                <span class="card-icon"></span>
+                <h4>Electra</h4>
+                <p>Sistema HPE SGI ICE XA. Uno de los caballos de batalla del HECC. Opera con TOSS 4 y se usa para simulaciones aerodinámicas y modelos climáticos.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon"></span>
+                <h4>Aitken</h4>
+                <p>Sistema HPE Apollo 2000. Especializado en Earth Science y modelos de dinámica de fluidos computacional. Completamente migrado a RHEL.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon"></span>
+                <h4>Athena</h4>
+                <p>El sistema más nuevo del HECC, incorporado en 2023. Opera sobre Red Hat Enterprise Linux 9 desde su primer día de funcionamiento.</p>
+            </div>
+            <div class="card">
+                <span class="card-icon"></span>
+                <h4>Pleiades (retirado)</h4>
+                <p>El histórico sistema SGI ICE que operó durante 17 años fue desactivado definitivamente en enero de 2026, completando la transición total a TOSS.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-brand"> NASA SEGURIDAD</span>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="redhat.html">Red Hat</a>
+            <a href="tails.html">Tails OS</a>
+            <a href="linux.html">Linux vs Windows</a>
+            <a href="https://github.com/ijebbansmx2n25-lgtm/Nasa" target="_blank">GitHub</a>
+        </div>
+        <p class="footer-copy">Iliyas Jebban • Seguridad Informática 2026 • Copyright © 2026</p>
+    </footer>
+</body>
+</html>

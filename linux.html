@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Por qué Linux y no Windows – Comparativa de seguridad">
+    <title>Linux vs Windows • Seguridad</title>
+    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgLVT0ObItN_D6MGvquvqpIJzeGUlcOJPp3Y6uZonVGxw_E9yibB3V5wQjg5-uInMTUX5fbfLErIImUc4pLCjaq7Mv2DdzYEAaSx20bqQ3G9yMC49YBrV6eAbY1Qhdl5iROxCt5SWjscewdVB0ikal5F5uH1F1lGLoan0_-9Fg0Y5yZy5foKVlTHmiuuQ/w1200-h630-p-k-no-nu/nasa_pc.jpeg" rel="stylesheet">
+    <style>
+        :root {
+            --nasa-blue: #0b3d91;
+            --nasa-red: #fc3d21;
+            --dark-bg: #060614;
+            --card-bg: #0e0e2c;
+            --card-border: #1e1e4a;
+            --text: #c8d4f0;
+            --text-bright: #e8eeff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 60% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 80%, rgba(255,255,255,0.4) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        nav {
+            background: rgba(11, 61, 145, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(252,61,33,0.3);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 4px 0;
+        }
+        .nav-links a:hover { color: white; }
+        .nav-links a.active {
+            color: var(--nasa-red);
+            border-bottom: 2px solid var(--nasa-red);
+        }
+
+        .page-hero {
+            position: relative;
+            z-index: 1;
+            padding: 80px 20px 60px;
+            text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(11,61,145,0.35) 0%, transparent 70%);
+        }
+        .page-hero .badge {
+            display: inline-block;
+            background: rgba(11,61,145,0.3);
+            border: 1px solid rgba(100,150,255,0.3);
+            color: #82aaff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+        .page-hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .page-hero p {
+            font-size: 1.1rem;
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 70px 20px;
+        }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--nasa-red);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.2rem;
+            line-height: 1.2;
+        }
+
+        /* VS BANNER */
+        .vs-banner {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        .vs-side {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+        .vs-side.linux { border-color: rgba(74,222,128,0.3); }
+        .vs-side.windows { border-color: rgba(252,61,33,0.2); }
+        .vs-side img {
+            height: 80px;
+            object-fit: contain;
+            margin: 0 auto 16px;
+            display: block;
+        }
+        .vs-side h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .vs-side p { font-size: 0.85rem; color: var(--text); }
+        .vs-badge-linux {
+            background: rgba(74,222,128,0.15);
+            color: #4ade80;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .vs-badge-windows {
+            background: rgba(252,61,33,0.1);
+            color: #fc3d21;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .vs-divider {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+        }
+
+        /* MAIN TABLE */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+        .compare-table th, .compare-table td {
+            padding: 18px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .compare-table th {
+            background: var(--nasa-blue);
+            color: white;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .compare-table td:first-child {
+            color: rgba(200,212,240,0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .compare-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        .green { color: #4ade80; font-weight: 600; }
+        .orange { color: #facc15; font-weight: 600; }
+        .red { color: #ef4444; font-weight: 600; }
+
+        /* REASONS GRID */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .reason-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .reason-card:hover {
+            border-color: rgba(74,222,128,0.3);
+            transform: translateY(-4px);
+        }
+        .reason-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
+        .reason-card h4 { font-weight: 700; color: white; margin-bottom: 8px; font-size: 1rem; }
+        .reason-card p { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+
+        /* IMAGE CONTENT */
+        .image-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .image-content-grid img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            display: block;
+        }
+        .image-content-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1.2rem;
+        }
+        .image-content-text p strong { color: white; }
+
+        /* DISTROS */
+        .distros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .distro-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        .distro-card:hover { border-color: rgba(74,222,128,0.25); }
+        .distro-card img {
+            height: 56px;
+            object-fit: contain;
+            margin: 0 auto 12px;
+            display: block;
+        }
+        .distro-card h5 { font-weight: 600; color: white; font-size: 0.95rem; margin-bottom: 6px; }
+        .distro-card p { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+
+        /* QUOTE */
+        .quote-block {
+            border-left: 4px solid #4ade80;
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border-radius: 0 12px 12px 0;
+            margin: 2rem 0;
+        }
+        .quote-block p {
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--text-bright);
+            line-height: 1.7;
+        }
+        .quote-block cite {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: rgba(200,212,240,0.6);
+            font-style: normal;
+        }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(11,61,145,0.3);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 50px 20px 30px;
+            text-align: center;
+        }
+        .footer-brand { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: white; margin-bottom: 1.2rem; display: block; }
+        .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .footer-links a { color: rgba(200,212,240,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-links a:hover { color: white; }
+        .footer-copy { font-size: 0.85rem; color: rgba(200,212,240,0.4); }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 1rem; flex-wrap: wrap; font-size: 0.85rem; }
+            .vs-banner { grid-template-columns: 1fr; }
+            .vs-divider { display: none; }
+            .image-content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"> NASA SEGURIDAD</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="redhat.html">Red Hat</a></li>
+                <li><a href="tails.html">Tails OS</a></li>
+                <li><a href="linux.html" class="active">Linux vs Windows</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <span class="badge"> Comparativa de seguridad</span>
+        <h1>Linux vs Windows</h1>
+        <p>Por qué la NASA eligió Linux para proteger sus misiones y por qué es la mejor opción para cualquiera que se tome en serio la seguridad.</p>
+    </div>
+
+    <!-- VS BANNER -->
+    <section>
+        <div class="vs-banner">
+            <div class="vs-side linux">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1920px-Tux.svg.png" alt="Linux Tux">
+                <span class="vs-badge-linux"> Elección NASA</span>
+                <h3>Linux</h3>
+                <p>Código abierto, control total, seguridad probada en entornos críticos.</p>
+            </div>
+            <div class="vs-divider">VS</div>
+            <div class="vs-side windows">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.svg/2048px-Windows_logo_-_2012.svg.png" alt="Windows">
+                <span class="vs-badge-windows"> No en sistemas críticos</span>
+                <h3>Windows</h3>
+                <p>Código cerrado, telemetría obligatoria, mayor superficie de ataque.</p>
+            </div>
+        </div>
+
+        <!-- TABLA COMPARATIVA -->
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Característica</th>
+                    <th>Linux</th>
+                    <th>Windows</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Código fuente</td>
+                    <td class="green">100% abierto y auditable</td>
+                    <td class="red">Propietario y cerrado</td>
+                </tr>
+                <tr>
+                    <td>Telemetría</td>
+                    <td class="green">Ninguna obligatoria</td>
+                    <td class="red">Obligatoria por defecto</td>
+                </tr>
+                <tr>
+                    <td>Objetivos de malware</td>
+                    <td class="green">Menos del 5% de los ataques</td>
+                    <td class="red">+90% de todos los virus</td>
+                </tr>
+                <tr>
+                    <td>Control de acceso</td>
+                    <td class="green">SELinux / AppArmor integrado</td>
+                    <td class="orange">UAC limitado</td>
+                </tr>
+                <tr>
+                    <td>Actualizaciones de seguridad</td>
+                    <td class="green">Inmediatas y controladas</td>
+                    <td class="orange">Programadas, no urgentes</td>
+                </tr>
+                <tr>
+                    <td>Uso en NASA</td>
+                    <td class="green">Sí — TOSS/Red Hat en todo HPC</td>
+                    <td class="red">No en sistemas críticos</td>
+                </tr>
+                <tr>
+                    <td>Gestión de permisos</td>
+                    <td class="green">Granular y flexible</td>
+                    <td class="orange">Limitada</td>
+                </tr>
+                <tr>
+                    <td>Auditorías independientes</td>
+                    <td class="green">Constantes por la comunidad</td>
+                    <td class="red">Solo internas de Microsoft</td>
+                </tr>
+                <tr>
+                    <td>Estabilidad del servidor</td>
+                    <td class="green">Años sin reinicios</td>
+                    <td class="orange">Reinicios frecuentes requeridos</td>
+                </tr>
+                <tr>
+                    <td>Coste</td>
+                    <td class="green">Gratuito (muchas distros)</td>
+                    <td class="orange">Licencias costosas</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- RAZONES -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Argumentos técnicos</span>
+        <div class="section-title">6 razones por las que Linux gana en seguridad</div>
+        <div class="reasons-grid">
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>Código abierto = más ojos</h4>
+                <p>Miles de desarrolladores revisan el código Linux constantemente. Los fallos de seguridad se detectan y parchean mucho más rápido que en software propietario.</p>
+            </div>
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>SELinux y AppArmor</h4>
+                <p>Módulos de seguridad que implementan control de acceso obligatorio. Incluso si un proceso es comprometido, su radio de acción está limitado por política.</p>
+            </div>
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>Menor superficie de ataque</h4>
+                <p>Linux tiene menos procesos en segundo plano, menos servicios expuestos por defecto y un modelo de permisos más estricto que Windows desde el arranque.</p>
+            </div>
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>Sin telemetría involuntaria</h4>
+                <p>Windows 10/11 recopila datos de uso, preferencias y comportamiento aunque el usuario lo desactive. En Linux, esto no existe salvo que el usuario lo active explícitamente.</p>
+            </div>
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>Actualizaciones de emergencia</h4>
+                <p>Cuando se descubre una vulnerabilidad crítica, la comunidad Linux puede lanzar un parche en horas. Microsoft sigue ciclos de "Patch Tuesday" mensuales.</p>
+            </div>
+            <div class="reason-card">
+                <span class="reason-icon"></span>
+                <h4>Diseño orientado a servidores</h4>
+                <p>Linux fue diseñado desde el principio para entornos multiusuario y de servidor. Windows fue diseñado para usuario único de escritorio y adaptado después.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NASA CONTEXT -->
+    <section style="padding-top: 0;">
+        <span class="section-label">El caso NASA</span>
+        <div class="image-content-grid">
+            <img src="https://www.shutterstock.com/shutterstock/videos/12340097/thumb/1.jpg?ip=x480" alt="NASA">
+            <div class="image-content-text">
+                <div class="section-title" style="font-size:1.8rem;">La NASA confía su infraestructura a Linux</div>
+                <p>En entornos donde un fallo informático puede costar vidas o miles de millones de dólares, no hay margen para sistemas opacos. La NASA necesita poder <strong>auditar cada línea de código</strong> que corre en sus supercomputadores.</p>
+                <p>Windows simplemente no puede ofrecer eso. Su código es propiedad de Microsoft, y la agencia espacial no puede verificar de forma independiente que no existan puertas traseras o vulnerabilidades desconocidas.</p>
+                <p>Con Red Hat Enterprise Linux, la NASA (y el Departamento de Defensa) pueden inspeccionar, modificar y verificar cada componente del sistema operativo.</p>
+                <div class="quote-block" style="margin-top: 1.5rem;">
+                    <p>La NASA confía en Linux para proteger sus misiones. Y tiene todo el sentido del mundo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DISTROS RECOMENDADAS -->
+    <section style="padding-top: 0;">
+        <span class="section-label">Para empezar</span>
+        <div class="section-title">Distribuciones Linux recomendadas por caso de uso</div>
+        <div class="distros-grid">
+            <div class="distro-card">
+                <img src="https://download.logo.wine/logo/Red_Hat/Red_Hat-Logo.wine.png" alt="Red Hat">
+                <h5>Red Hat / RHEL</h5>
+                <p>Servidores y sistemas críticos. La elección de NASA, DoD y empresas Fortune 500.</p>
+            </div>
+            <div class="distro-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Ubuntu-logo-2022.svg/960px-Ubuntu-logo-2022.svg.png" alt="Ubuntu">
+                <h5>Ubuntu</h5>
+                <p>Ideal para usuarios nuevos en Linux. Excelente soporte de hardware y documentación.</p>
+            </div>
+            <div class="distro-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Fedora_logo_and_wordmark.svg" alt="Fedora" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/800px-Tux.svg.png';">
+                <h5>Fedora</h5>
+                <p>La distribución comunitaria de Red Hat. Tecnología punta y seguridad por defecto.</p>
+            </div>
+            <div class="distro-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Tails-logo-flat-inverted.svg/1280px-Tails-logo-flat-inverted.svg.png" alt="Tails">
+                <h5>Tails OS</h5>
+                <p>Máxima privacidad y anonimato. Para situaciones donde no puede quedar ningún rastro.</p>
+            </div>
+            <div class="distro-card">
+                <img src="https://icon-icons.com/download-file?file=https%3A%2F%2Fimages.icon-icons.com%2F2699%2FPNG%2F512%2Fdebian_logo_icon_168290.png&id=168290&pack_or_individual=pack" alt="Debian">
+                <h5>Debian</h5>
+                <p>Estabilidad legendaria. Base de Ubuntu y Tails. Ideal para servidores y desarrolladores.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-brand"> NASA SEGURIDAD</span>
+        <div class="footer-links">
+            <a href="index.html">Inicio</a>
+            <a href="redhat.html">Red Hat</a>
+            <a href="tails.html">Tails OS</a>
+            <a href="linux.html">Linux vs Windows</a>
+            <a href="https://github.com/ijebbansmx2n25-lgtm/Nasa" target="_blank">GitHub</a>
+        </div>
+        <p class="footer-copy">Iliyas Jebban • Seguridad Informática 2026 • Copyright © 2026</p>
+    </footer>
+</body>
+</html>
